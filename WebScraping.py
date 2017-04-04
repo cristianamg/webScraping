@@ -1,32 +1,30 @@
-
 import bs4 as bs
 import urllib.request
 import re
 from lxml import etree
-
-sauce = urllib.request.urlopen('http://motos.coches.net/').read()
-soup = bs.BeautifulSoup(sauce, 'lxml')
-lisa_all = []
+SafeLink = []
 listanueva = []
-for sauce in soup.findAll('a', href=True, title= True, xtclib= True):
-  valores = (sauce.get('href'))
-  lisa_all.append(valores)
-  lst = list(set(lisa_all))
-for i in lst:
-        if "#ctrl_comments"not in i:
-            if ".net" not in i:
-                if ".aspx" not in i:
-                    if len(i)>30:
-                        listanueva.append('http://motos.coches.net'+i)
+AllURL=[]
+
+URL = urllib.request.urlopen('https://www.encuentra24.com/costa-rica-es/autos-motos').read()
+soup = bs.BeautifulSoup(URL, 'lxml')
+for URL in soup.findAll('a', {'class': 'ann-box-title'}):
+    LinkHref = (URL.get('href'))
+    SafeLink.append(LinkHref)
+    ListCast = list(set(SafeLink))
+for i in ListCast:
+    listanueva.append('https://www.encuentra24.com/'+i)
 for i in listanueva:
     print(i)
-
-
+print("Licalizacion,  Marca, Modelo,   Enviado,    Precio,     Año,  Kilometros,  Motor")
 for i in listanueva:
     sauce2 = urllib.request.urlopen(i).read()
     soup2 = bs.BeautifulSoup(sauce2, 'lxml')
-
-    valor = soup2.find_next('ul').find_all('li')
-    print(valor.text )
-
-#//*[contains(concat( " ", @class, " " ), concat( " ", "ftresto1", " " ))]
+    ListTemporal = []
+    ListTempora2 = []
+    for f in soup2.findAll('span', {'class': 'info-name'}):
+        ListTempora2.append(f.text)
+    for f in soup2.findAll('span', {'class': 'info-value'}):
+        ListTemporal.append(f.text)
+        AllURL.append(ListTemporal)
+print(AllURL)
